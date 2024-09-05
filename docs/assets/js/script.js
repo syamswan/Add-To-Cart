@@ -2,18 +2,56 @@ const offerCount = 3;
 let popularity = "Most Popular";
 const popularityId = 2;
 
-const cardData = {
-  id: [1, 2, 3],
-  offerType: ["Buy 1 Get 2", "Buy 2 Get 4", "Buy 3 Get 6"],
-  priceMoney: ["$18.00 USD", "$24.00 USD", "$36.00 USD"],
-  offPercent: ["30", "30", "10"],
-};
+let selectedId = 0;
+let selectedObj = {};
+
+const cardData = [
+  {
+    id: 1,
+    offerType: "Buy 1 Get 2",
+    priceMoney: "$18.00 USD",
+    offPercent: "30",
+    sizes: ["M", "L"],
+    colors: ["white", "red"],
+  },
+  {
+    id: 2,
+    offerType: "Buy 2 Get 4",
+    priceMoney: "$24.00 USD",
+    offPercent: "30",
+    sizes: ["L", "L"],
+    colors: ["red", "white"],
+  },
+  {
+    id: 3,
+    offerType: "Buy 3 Get 6",
+    priceMoney: "$36.00 USD",
+    offPercent: "10",
+    sizes: ["L", "M"],
+    colors: ["white", "white"],
+  },
+];
 
 cardLoad();
 eventListener();
 
 function eventListener() {
   radioClickCard();
+
+  document.getElementById("addToCart").addEventListener("click", function () {
+    selectedObj = cardData[selectedId];
+
+    const displayData =
+      "Applied Offer = " +
+      selectedObj.offerType +
+      " Total Offer = " +
+      selectedObj.priceMoney +
+      " Selected Sizes = " +
+      selectedObj.sizes.toString() +
+      " Selected Colours = " +
+      selectedObj.colors.toString();
+    alert(displayData);
+  });
 }
 
 function cardLoad() {
@@ -22,24 +60,24 @@ function cardLoad() {
   for (let i = 0; i < offerCount; i++) {
     const subCardsAppend = ` <div class = "card-lists">
                           <div class="sub-cards main-cards" id="main_${
-                            cardData.id[i]
+                            cardData[i].id
                           }" class="addMain">
                           <span class="order-offer-price">
-                          ${cardData.offPercent[i]}% <br> Off
+                          ${cardData[i].offPercent}% <br> Off
                           </span>
                           <span style="display: flex; align-items: center; padding:20px;">
                           <input type="radio" id="radioBtn_main_${
-                            cardData.id[i]
-                          }" name="example" value=${cardData.id[i]}>
+                            cardData[i].id
+                          }" name="example" value=${cardData[i].id}>
                           <span style="margin-left: 10px;">
-                          ${cardData.offerType[i]} 
+                          ${cardData[i].offerType} 
                           <br>
                           <b style="margin-top: 10px;">${
-                            cardData.priceMoney[i]
+                            cardData[i].priceMoney
                           } </b>
                           </span>
                           ${
-                            popularityId == cardData.id[i]
+                            popularityId == cardData[i].id
                               ? '<span class="popularity">' +
                                 popularity +
                                 "</span>"
@@ -80,6 +118,8 @@ function radioClickCard() {
           .classList.add("removeDetailed");
       });
 
+      selectedId = radioBtn.value - 1;
+
       const mainCardElement = document.getElementById(`main_${radioBtn.value}`);
       const detailedCardElement = document.getElementById(
         `detailedContent_${radioBtn.value}`
@@ -92,7 +132,7 @@ function radioClickCard() {
       detailedCardElement.classList.add("addDetailed");
 
       totalChargeElement.innerHTML = `Total : <b>${
-        cardData.priceMoney[radioBtn.value - 1]
+        cardData[radioBtn.value - 1].priceMoney
       } </b> `;
     });
   });
@@ -112,32 +152,32 @@ function initialSelectedCard() {
 
   document.getElementById(
     "totalCharge"
-  ).innerHTML = `Total : <b>${cardData.priceMoney[0]} </b>`;
+  ).innerHTML = `Total : <b>${cardData[0].priceMoney} </b>`;
 }
 
 function detailedView(i) {
   return `  <div id="detailedContent_${
-    cardData.id[i]
+    cardData[i].id
   }" class="removeDetailed detailed-cards">
 
   <div class="sub-cards">
   <span>
   <input type="radio" class="detailed-check" id="detailedcheck_${
-    cardData.id[i]
-  }" name="detailed" value=${cardData.id[i]}>
+    cardData[i].id
+  }" name="detailed" value=${cardData[i].id}>
   <span style="margin-left: 5px;">
-  ${cardData.offerType[i]} 
+  ${cardData[i].offerType} 
   
-  <span class="offer-detailed"> ${cardData.offPercent[i]}% Off </span>
+  <span class="offer-detailed"> ${cardData[i].offPercent}% Off </span>
 
   ${
-    popularityId == cardData.id[i]
+    popularityId == cardData[i].id
       ? '<span class="popularity">' + popularity + "</span>"
       : ""
   }
   <br>
   <b style="margin-top: 10px; margin-left: 30px;">  ${
-    cardData.priceMoney[i]
+    cardData[i].priceMoney
   } </b>
   </span>
   </span>
@@ -151,33 +191,39 @@ function detailedView(i) {
    </tr>
    <thead>
    <tbody>
-      ${sizeColorTable()}
+      ${sizeColorTable(cardData[i].sizes, cardData[i].colors, cardData[i].id)}
    </tbody>   
   </table>`;
 }
 
-function sizeColorTable() {
+function sizeColorTable(sizes, colors, id) {
   let tableData = "";
 
-  for (let i = 1; i <= 2; i++) {
+  for (let i = 0; i < sizes.length; i++) {
     tableData += `
-                         <tr>
-                           <td>#${i}</td>
+                         <tr id="tbody_${id}">
+                           <td>#${i + 1}</td>
                            <td>
                            <div class="select-field">
-                             <select>
-                               <option value ="S"> S </option>
-                               <option value ="M"> M </option>
-                               <option value ="L"> L </option>
+                             <select id="selectSize_${i}" onchange="updateSize(${i}, ${id})">
+                               <option value ="M" ${
+                                 sizes[i] === "M" ? "selected" : ""
+                               }> M </option>
+                               <option value ="L" ${
+                                 sizes[i] === "L" ? "selected" : ""
+                               }> L </option>
                              <select/>
                              <div>
                             </td>
                            <td>
                            <div class="select-field">
-                           <select>
-                               <option value ="green"> Green </option>
-                               <option value ="red"> Red </option>
-                               <option value ="white" selected> White </option>
+                           <select id="selectColor_${i}" onchange="updateColor(${i}, ${id})">
+                               <option value ="red" ${
+                                 colors[i] === "red" ? "selected" : ""
+                               }> Red </option>
+                               <option value ="white" ${
+                                 colors[i] === "white" ? "selected" : ""
+                               }> White </option>
                             <select/>
                             </div>
                            </td>
@@ -185,24 +231,20 @@ function sizeColorTable() {
   }
 
   return tableData;
+}
 
-  // <div style ="display:flex; justify-content: space-evenly;">
-  // <span>
-  //      <p> Size </p>
-  // <span>
-  //  <select>
-  //     <option value ="S"> S </option>
-  //     <option value ="M"> M </option>
-  //     <option value ="L"> L </option>
-  //  <select/>
+function updateSize(index, cardId) {
+  const selectedSize = document.getElementById(`selectSize_${index}`).value;
 
-  //  <select>
-  //  <option value ="green"> Green </option>
-  //  <option value ="red"> Red </option>
-  //  <option value ="white"> White </option>
-  // <select/>
+  selectedObj = {};
+  selectedObj = cardData[selectedId];
+  selectedObj.sizes[index] = selectedSize;
+}
 
-  // </span>
-  // </span>
-  // </div>
+function updateColor(index, cardId) {
+  const selectedColors = document.getElementById(`selectColor_${index}`).value;
+
+  selectedObj = {};
+  selectedObj = cardData[selectedId];
+  selectedObj.colors[index] = selectedColors;
 }
