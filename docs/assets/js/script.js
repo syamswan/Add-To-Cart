@@ -205,7 +205,7 @@ function sizeColorTable(sizes, colors, id) {
                            <td>#${i + 1}</td>
                            <td>
                            <div class="select-field">
-                             <select id="selectSize_${i}" onchange="updateSize(${i}, ${id})">
+                             <select id="selectSize_${i}_${id}" onchange="updateSize(${i}, ${id})">
                                <option value ="M" ${
                                  sizes[i] === "M" ? "selected" : ""
                                }> M </option>
@@ -217,7 +217,7 @@ function sizeColorTable(sizes, colors, id) {
                             </td>
                            <td>
                            <div class="select-field">
-                           <select id="selectColor_${i}" onchange="updateColor(${i}, ${id})">
+                           <select id="selectColor_${i}_${id}" onchange="updateColor(${i}, ${id})">
                                <option value ="red" ${
                                  colors[i] === "red" ? "selected" : ""
                                }> Red </option>
@@ -234,7 +234,7 @@ function sizeColorTable(sizes, colors, id) {
 }
 
 function updateSize(index, cardId) {
-  const selectedSize = document.getElementById(`selectSize_${index}`).value;
+  const selectedSize = document.getElementById(`selectSize_${index}_${cardId}`).value;
 
   selectedObj = {};
   selectedObj = cardData[selectedId];
@@ -242,7 +242,7 @@ function updateSize(index, cardId) {
 }
 
 function updateColor(index, cardId) {
-  const selectedColors = document.getElementById(`selectColor_${index}`).value;
+  const selectedColors = document.getElementById(`selectColor_${index}_${cardId}`).value;
 
   selectedObj = {};
   selectedObj = cardData[selectedId];
