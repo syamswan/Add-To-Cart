@@ -5,6 +5,7 @@ const popularityId = 2;
 let selectedId = 0;
 let selectedObj = {};
 
+// Data Initialization
 const cardData = [
   {
     id: 1,
@@ -35,7 +36,7 @@ const cardData = [
 cardLoad();
 eventListener();
 
-function eventListener() {
+function eventListener() {                                               // All Events will be initialized here
   radioClickCard();
 
   document.getElementById("addToCart").addEventListener("click", function () {
@@ -54,7 +55,7 @@ function eventListener() {
   });
 }
 
-function cardLoad() {
+function cardLoad() {                                                    // Initial All Card Load
   let htmlElement = document.getElementById("subCardsList");
 
   for (let i = 0; i < offerCount; i++) {
@@ -96,7 +97,7 @@ function cardLoad() {
   initialSelectedCard();
 }
 
-function radioClickCard() {
+function radioClickCard() {                                              // Radio button click and change of cards
   const radioButtons = document.querySelectorAll('input[type="radio"]');
   let totalChargeElement = document.getElementById("totalCharge");
 
@@ -137,8 +138,8 @@ function radioClickCard() {
     });
   });
 }
-
-function initialSelectedCard() {
+                                                                     
+function initialSelectedCard() {                                         // Initial selected Card Detailed View
   document.getElementById(`detailedcheck_1`).checked = true;
 
   const mainCardElement = document.getElementById(`main_1`);
@@ -155,7 +156,7 @@ function initialSelectedCard() {
   ).innerHTML = `Total : <b>${cardData[0].priceMoney} </b>`;
 }
 
-function detailedView(i) {
+function detailedView(i) {                                               // Initial All detailed Card view with hidden
   return `  <div id="detailedContent_${
     cardData[i].id
   }" class="removeDetailed detailed-cards">
@@ -196,7 +197,7 @@ function detailedView(i) {
   </table>`;
 }
 
-function sizeColorTable(sizes, colors, id) {
+function sizeColorTable(sizes, colors, id) {                             // Initialisation of all sizes and colours on initial Load.
   let tableData = "";
 
   for (let i = 0; i < sizes.length; i++) {
@@ -233,7 +234,7 @@ function sizeColorTable(sizes, colors, id) {
   return tableData;
 }
 
-function updateSize(index, cardId) {
+function updateSize(index, cardId) {                                     // Update sizes on change of it.
   const selectedSize = document.getElementById(`selectSize_${index}_${cardId}`).value;
 
   selectedObj = {};
@@ -241,7 +242,7 @@ function updateSize(index, cardId) {
   selectedObj.sizes[index] = selectedSize;
 }
 
-function updateColor(index, cardId) {
+function updateColor(index, cardId) {                                    // Update colors on change of it.
   const selectedColors = document.getElementById(`selectColor_${index}_${cardId}`).value;
 
   selectedObj = {};
